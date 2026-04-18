@@ -1,5 +1,5 @@
 exports.validatePost = (req, res, next) => {
-  const { title, content } = req.body;
+  const { title, content, image } = req.body;
 
   if (!title || title.trim().length < 3) {
     return res.status(400).json({
@@ -14,6 +14,14 @@ exports.validatePost = (req, res, next) => {
       message: "El contenido debe tener al menos 10 caracteres"
     });
   }
+  if (image && !image.startsWith("http")) {
+  return res.status(400).json({
+    success: false,
+    errors: {
+      image: "La URL de la imagen no es válida"
+    }
+  });
+}
 
   next();
 };

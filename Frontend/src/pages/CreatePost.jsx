@@ -22,27 +22,71 @@ export default function CreatePost() {
     });
 
     navigate("/");
+    window.location.reload(); // refresca lista
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>Crear Post</h1>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="form">
+
+        {/* TÍTULO */}
         <input
           placeholder="Título"
+          value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
+          className={errors.title ? "input-error" : ""}
         />
+        {errors.title && <span className="error">{errors.title}</span>}
+
+        {/* CONTENIDO */}
         <textarea
           placeholder="Contenido"
+          value={form.content}
           onChange={(e) => setForm({ ...form, content: e.target.value })}
+          className={errors.content ? "input-error" : ""}
         />
-        <input
-          placeholder="Imagen URL"
-          onChange={(e) => setForm({ ...form, image: e.target.value })}
-        />
+        {errors.content && <span className="error">{errors.content}</span>}
 
-        <button type="submit">Guardar</button>
+        {/* IMAGEN */}
+        <input
+          placeholder="URL Imagen"
+          value={form.image}
+          onChange={(e) => setForm({ ...form, image: e.target.value })}
+          className={errors.image ? "input-error" : ""}
+        />
+        {errors.image && <span className="error">{errors.image}</span>}
+
+        {/* PREVIEW */}
+        {form.image && (
+          <img
+            src={form.image}
+            style={{
+              width: "100%",
+              borderRadius: "8px",
+              marginTop: "10px"
+            }}
+          />
+        )}
+
+        {/* BOTONES */}
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button type="submit" className="btn btn-primary">
+            Guardar
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-cancel"
+            onClick={() => {
+              setShowModal(false);
+              setErrors({});
+            }}
+          >
+            Cancelar
+          </button>
+        </div>
       </form>
     </div>
   );

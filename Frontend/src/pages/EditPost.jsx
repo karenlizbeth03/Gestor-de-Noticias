@@ -1,23 +1,46 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import PostForm from "../components/PostForm";
-import { getPost, updatePost } from "../services/postService";
 
 export default function EditPost() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [post, setPost] = useState(null);
+
+  const [form, setForm] = useState({
+    title: "",
+    content: "",
+    image: "",
+  });
 
   useEffect(() => {
-    getPost(id).then(res => setPost(res.data));
+    fetch(`http://localhost:3001/api/posts/${id}`)
+      .then(res => res.json())
+      .then(data => setForm(data.data));
   }, [id]);
 
-  const handleSubmit = async (data) => {
-    await updatePost(id, data);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    await fetch(`http://localhost:3001/api/posts/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
     navigate("/");
+    window.location.reload();
   };
 
-  if (!post) return <p>Cargando...</p>;
+  return (
+    <div className="container">
+      <h1>Editar Post</h1>
 
-  return <PostForm onSubmit={handleSubmit} initialData={post} />;
+      <form className="form" onSubmit={handleSubmit}>
+        <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+        <textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} />
+        <input value={form.image} onChange={(e) => setForm({ ...form, image: e.target.value })} />
+
+        <button type="submit">Actualizar</button>
+      </form>
+    </div>
+  );
 }
