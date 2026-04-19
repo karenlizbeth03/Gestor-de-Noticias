@@ -83,7 +83,6 @@ export default function CreatePost() {
           </button>
 
           <h1>✍️ Crear nueva historia</h1>
-          <p>Comparte algo interesante con el mundo</p>
         </div>
 
         {/* FORM */}
@@ -134,7 +133,7 @@ export default function CreatePost() {
           {/* ACTIONS */}
           <div className="form-actions">
             <button type="submit" className="btn-publish">
-              🚀 Publicar
+               Publicar
             </button>
 
             <button

@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import { useTheme } from "../context/ThemeContext";
 
 export default function Navbar({ onSearch, totalPosts }) {
   const location = useLocation();
+  const navigate = useNavigate(); // ✅ NUEVO
   const [search, setSearch] = useState("");
   const { lang, changeLanguage, uiText } = useLanguage();
   const { theme, toggleTheme } = useTheme();
@@ -20,7 +21,7 @@ export default function Navbar({ onSearch, totalPosts }) {
 
       {/* LEFT */}
       <div className="nav-left">
-        <h2 className="logo">📰 NewsAdmin</h2>
+        <h2 className="logo">Gestor de Noticias</h2>
 
         <Link
           to="/"
@@ -28,11 +29,11 @@ export default function Navbar({ onSearch, totalPosts }) {
             location.pathname === "/" ? "active" : ""
           }`}
         >
-          Inicio
+          PUBLICACIONES
         </Link>
       </div>
 
-      {/* CENTER (SEARCH PRO) */}
+      {/* CENTER */}
       <div className="nav-center">
         <div className="search-box">
           <span>🔍</span>
@@ -68,10 +69,10 @@ export default function Navbar({ onSearch, totalPosts }) {
           {theme === "dark" ? "🌙" : "☀️"}
         </button>
 
-        {/* BOTÓN NUEVO */}
+        {/* ✅ BOTÓN NUEVO CORREGIDO */}
         <button
           className="btn-new"
-          onClick={() => window.dispatchEvent(new Event("openModal"))}
+          onClick={() => navigate("/create")}
         >
           ✨ {uiText.newPost || "Nuevo"}
         </button>
