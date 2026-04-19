@@ -11,19 +11,16 @@ export default function PostDetail() {
   const { lang } = useLanguage();
   const navigate = useNavigate();
 
-  // 🔄 Obtener post
   useEffect(() => {
     fetch(`http://localhost:3001/api/posts/${id}`)
       .then(res => res.json())
       .then(data => setPost(data.data));
   }, [id]);
 
-  // 🌍 Traducción
   useEffect(() => {
     const translate = async () => {
       if (!post) return;
 
-      // 🔹 Español = original
       if (lang === "es") {
         setTranslated(post);
         return;
@@ -50,48 +47,45 @@ export default function PostDetail() {
   }, [lang, post]);
 
   if (!translated) {
-    return <p style={{ padding: "30px" }}>Cargando...</p>;
+    return <div className="loader"></div>;
   }
 
   return (
-    <div className="detail-page">
+    <div className="post-hero">
 
-      {/* 🔙 BOTÓN REGRESAR */}
-      <button
-        className="back-btn"
-        onClick={() => navigate(-1)}
+      {/* HERO */}
+      <div
+        className="post-hero-bg"
+        style={{
+          backgroundImage: `url(${translated.image})`
+        }}
       >
-        ← Volver
-      </button>
+        <div className="post-hero-overlay" />
+      </div>
 
-      {/* 🖼️ HERO IMAGE (GRANDE) */}
-      {translated.image && (
-        <div className="detail-hero">
-          <img src={translated.image} alt={translated.title} />
-          <div className="detail-overlay"></div>
-        </div>
-      )}
+      {/* CARD */}
+      <div className="post-card">
 
-      {/* 📄 CONTENIDO */}
-      <div className="detail-content">
-<button
-        className="back-btn"
-        onClick={() => navigate(-1)}
-      >
-        ← Volver
-      </button>
-        <h1>{translated.title}</h1>
+        <button className="post-back" onClick={() => navigate(-1)}>
+          ← Volver
+        </button>
 
-        {/* 🖼️ THUMB (IMAGEN PEQUEÑA) */}
+        <h1 className="post-title">{translated.title}</h1>
+
+        <p className="post-meta">
+          📰 Publicado • {new Date().toLocaleDateString()}
+        </p>
+
+        {/* IMAGEN CENTRADA */}
         {translated.image && (
           <img
             src={translated.image}
-            className="detail-thumb"
+            className="post-image"
             alt="preview"
           />
         )}
 
-        <p className="detail-text">
+        <p className="post-content">
           {translated.content}
         </p>
 

@@ -10,8 +10,32 @@ export default function CreatePost() {
     image: "",
   });
 
+  const [errors, setErrors] = useState({});
+
+  // VALIDACIÓN
+  const validate = () => {
+    const newErrors = {};
+
+    if (!form.title || form.title.length < 3) {
+      newErrors.title = "El título debe tener al menos 3 caracteres";
+    }
+
+    if (!form.content || form.content.length < 10) {
+      newErrors.content = "El contenido debe tener al menos 10 caracteres";
+    }
+
+    if (form.image && !form.image.startsWith("http")) {
+      newErrors.image = "URL inválida";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validate()) return;
 
     await fetch("http://localhost:3001/api/posts", {
       method: "POST",
@@ -22,72 +46,85 @@ export default function CreatePost() {
     });
 
     navigate("/");
-    window.location.reload(); // refresca lista
   };
 
   return (
-    <div className="container">
-      <h1>Crear Post</h1>
+    <div className="create-page">
 
-      <form onSubmit={handleSubmit} className="form">
+      <div className="create-container">
 
-        {/* TÍTULO */}
-        <input
-          placeholder="Título"
-          value={form.title}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-          className={errors.title ? "input-error" : ""}
-        />
-        {errors.title && <span className="error">{errors.title}</span>}
-
-        {/* CONTENIDO */}
-        <textarea
-          placeholder="Contenido"
-          value={form.content}
-          onChange={(e) => setForm({ ...form, content: e.target.value })}
-          className={errors.content ? "input-error" : ""}
-        />
-        {errors.content && <span className="error">{errors.content}</span>}
-
-        {/* IMAGEN */}
-        <input
-          placeholder="URL Imagen"
-          value={form.image}
-          onChange={(e) => setForm({ ...form, image: e.target.value })}
-          className={errors.image ? "input-error" : ""}
-        />
-        {errors.image && <span className="error">{errors.image}</span>}
-
-        {/* PREVIEW */}
-        {form.image && (
-          <img
-            src={form.image}
-            style={{
-              width: "100%",
-              borderRadius: "8px",
-              marginTop: "10px"
-            }}
-          />
-        )}
-
-        {/* BOTONES */}
-        <div style={{ display: "flex", gap: "10px" }}>
-          <button type="submit" className="btn btn-primary">
-            Guardar
+        {/* HEADER */}
+        <div className="create-header">
+          <button onClick={() => navigate(-1)} className="back-link">
+            ← Volver
           </button>
 
-          <button
-            type="button"
-            className="btn btn-cancel"
-            onClick={() => {
-              setShowModal(false);
-              setErrors({});
-            }}
-          >
-            Cancelar
-          </button>
+          <h1>✍️ Crear nueva historia</h1>
+          <p>Comparte algo interesante con el mundo</p>
         </div>
-      </form>
+
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="create-form">
+
+          {/* TITULO */}
+          <input
+            className={`input ${errors.title ? "input-error" : ""}`}
+            placeholder="Título de la historia..."
+            value={form.title}
+            onChange={(e) =>
+              setForm({ ...form, title: e.target.value })
+            }
+          />
+          {errors.title && <span className="error">{errors.title}</span>}
+
+          {/* IMAGEN */}
+          <input
+            className={`input ${errors.image ? "input-error" : ""}`}
+            placeholder="URL de imagen (opcional)"
+            value={form.image}
+            onChange={(e) =>
+              setForm({ ...form, image: e.target.value })
+            }
+          />
+          {errors.image && <span className="error">{errors.image}</span>}
+
+          {/* PREVIEW */}
+          {form.image && (
+            <div className="image-preview">
+              <img src={form.image} alt="preview" />
+            </div>
+          )}
+
+          {/* CONTENIDO */}
+          <textarea
+            className={`textarea ${errors.content ? "input-error" : ""}`}
+            placeholder="Empieza a escribir tu historia..."
+            value={form.content}
+            onChange={(e) =>
+              setForm({ ...form, content: e.target.value })
+            }
+          />
+          {errors.content && (
+            <span className="error">{errors.content}</span>
+          )}
+
+          {/* ACTIONS */}
+          <div className="form-actions">
+            <button type="submit" className="btn-publish">
+              🚀 Publicar
+            </button>
+
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={() => navigate(-1)}
+            >
+              Cancelar
+            </button>
+          </div>
+
+        </form>
+      </div>
     </div>
   );
 }

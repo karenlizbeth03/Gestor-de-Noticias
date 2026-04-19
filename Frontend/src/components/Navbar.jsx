@@ -7,13 +7,7 @@ export default function Navbar({ onSearch, totalPosts }) {
   const location = useLocation();
   const [search, setSearch] = useState("");
   const { lang, changeLanguage, uiText } = useLanguage();
-  
-
-const { theme, toggleTheme } = useTheme();
-
-<button onClick={toggleTheme} className="btn">
-  {theme === "dark" ? "🌙 Oscuro" : "☀️ Claro"}
-</button>
+  const { theme, toggleTheme } = useTheme();
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -23,29 +17,66 @@ const { theme, toggleTheme } = useTheme();
 
   return (
     <nav className="navbar">
-      <h2>📰 NewsAdmin</h2>
 
-      <Link to="/" className={location.pathname === "/" ? "active" : ""}>
-        Inicio
-      </Link>
+      {/* LEFT */}
+      <div className="nav-left">
+        <h2 className="logo">📰 NewsAdmin</h2>
 
-      <input
-        placeholder={uiText.search || "Buscar..."}
-        value={search}
-        onChange={handleSearch}
-      />
+        <Link
+          to="/"
+          className={`nav-link ${
+            location.pathname === "/" ? "active" : ""
+          }`}
+        >
+          Inicio
+        </Link>
+      </div>
 
-      <select value={lang} onChange={(e) => changeLanguage(e.target.value)}>
-        <option value="es">ES</option>
-        <option value="en">EN</option>
-        <option value="fr">FR</option>
-      </select>
+      {/* CENTER (SEARCH PRO) */}
+      <div className="nav-center">
+        <div className="search-box">
+          <span>🔍</span>
+          <input
+            placeholder={uiText.search || "Buscar noticias..."}
+            value={search}
+            onChange={handleSearch}
+          />
+        </div>
+      </div>
 
-      <span>{totalPosts} {uiText.posts}</span>
+      {/* RIGHT */}
+      <div className="nav-right">
 
-      <button onClick={() => window.dispatchEvent(new Event("openModal"))}>
-        + {uiText.newPost}
-      </button>
+        {/* CONTADOR */}
+        <div className="badge">
+          📄 {totalPosts}
+        </div>
+
+        {/* IDIOMA */}
+        <select
+          className="select"
+          value={lang}
+          onChange={(e) => changeLanguage(e.target.value)}
+        >
+          <option value="es">ES</option>
+          <option value="en">EN</option>
+          <option value="fr">FR</option>
+        </select>
+
+        {/* TEMA */}
+        <button onClick={toggleTheme} className="theme-btn">
+          {theme === "dark" ? "🌙" : "☀️"}
+        </button>
+
+        {/* BOTÓN NUEVO */}
+        <button
+          className="btn-new"
+          onClick={() => window.dispatchEvent(new Event("openModal"))}
+        >
+          ✨ {uiText.newPost || "Nuevo"}
+        </button>
+
+      </div>
     </nav>
   );
 }

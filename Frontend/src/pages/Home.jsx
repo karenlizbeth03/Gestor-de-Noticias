@@ -1,52 +1,26 @@
 import { useEffect, useState } from "react";
 import Modal from "../components/Modal";
-import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { translateBatch } from "../services/translateService";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
-  const [filteredPosts, setFilteredPosts] = useState([]);
   const [translatedPosts, setTranslatedPosts] = useState([]);
-  const [ setUiText] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ title: "", content: "", image: "" });
   const [editId, setEditId] = useState(null);
-  const [selectedLang, setSelectedLang] = useState("es");
-  const [isTranslating, setIsTranslating] = useState(false);
-  const { lang, uiText } = useLanguage();
+  const [errors, setErrors] = useState({}); // ✅ FALTABA ESTO
 
+  const { lang, uiText } = useLanguage();
   const navigate = useNavigate();
 
-  // 🧠 TEXTOS BASE
-  const defaultUI = {
-    title: "Panel de Noticias",
-    subtitle: "Administra tus publicaciones fácilmente",
-    noPosts: "No hay publicaciones",
-    edit: "Editar",
-    delete: "Eliminar",
-    save: "Guardar",
-    cancel: "Cancelar",
-    create: "Crear Post",
-    update: "Editar Post",
-    selectLang: "Seleccionar Idioma",
-    translating: "Traduciendo...",
-    confirmDelete: "¿Seguro que deseas eliminar este post?",
-    titlePlaceholder: "Título",
-    contentPlaceholder: "Contenido",
-    imagePlaceholder: "URL Imagen"
-  };
-
-  // 🔄 Obtener posts
+  // 🔄 GET POSTS
   const fetchPosts = () => {
     fetch("http://localhost:3001/api/posts")
       .then(res => res.json())
       .then(data => {
-        const postsData = data.data || [];
-        setPosts(postsData);
-        setFilteredPosts(postsData);
-        setTranslatedPosts(postsData);
+        setPosts(data.data || []);
       });
   };
 
@@ -59,119 +33,37 @@ export default function Home() {
     return () => window.removeEventListener("openModal", open);
   }, []);
 
-  // 🔍 BUSCADOR
-  const handleSearch = (term) => {
-    const filtered = posts.filter(post =>
-      post.title.toLowerCase().includes(term.toLowerCase()) ||
-      post.content.toLowerCase().includes(term.toLowerCase())
-    );
-    setFilteredPosts(filtered);
-  };
-
-  // 🌍 TRADUCCIÓN GLOBAL PRO
-  const translateAll = async (lang, postsData) => {
-    if (lang === "es") {
-      setTranslatedPosts(postsData);
-      setUiText(defaultUI);
-      return;
-    }
-
-    setIsTranslating(true);
-
-    const payload = {
-      ui: defaultUI,
-      posts: postsData.map(p => ({
-        id: p.id,
-        title: p.title,
-        content: p.content
-      }))
-    };
-
-    try {
-      const result = await translateBatch(payload, lang);
-
-      setUiText(result.ui || defaultUI);
-
-      const newPosts = postsData.map((post, i) => ({
-        ...post,
-        title: result.posts?.[i]?.title || post.title,
-        content: result.posts?.[i]?.content || post.content
-      }));
-
-      setTranslatedPosts(newPosts);
-
-    } catch (err) {
-      console.error(err);
-      setTranslatedPosts(postsData);
-      setUiText(defaultUI);
-    } finally {
-      setIsTranslating(false);
-    }
-  };
-
-  // 🔁 Ejecutar traducción automática
+  // 🌍 TRADUCCIÓN
   useEffect(() => {
-    if (filteredPosts.length > 0) {
-      translateAll(selectedLang, filteredPosts);
-    }
-  }, [selectedLang, filteredPosts]);
-
-  // 🌐 Cargar idioma guardado
-  useEffect(() => {
-    const saved = localStorage.getItem("lang");
-    if (saved) setSelectedLang(saved);
-  }, []);
-
-  // 🌐 Cambiar idioma
-  const handleLangChange = (e) => {
-    const lang = e.target.value;
-    setSelectedLang(lang);
-    localStorage.setItem("lang", lang);
-  };
-
-  // ➕ CREAR / EDITAR
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    let newErrors = {};
-
-    Object.keys(form).forEach((key) => {
-      const error = validateField(key, form[key]);
-      if (error) newErrors[key] = error;
-    });
-
-    setErrors(newErrors);
-    if (Object.keys(newErrors).length > 0) return;
-
-    const url = editId
-      ? `http://localhost:3001/api/posts/${editId}`
-      : "http://localhost:3001/api/posts";
-
-    const method = editId ? "PUT" : "POST";
-
-    try {
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setErrors(data.errors || {});
+    const translate = async () => {
+      if (lang === "es") {
+        setTranslatedPosts(posts);
         return;
       }
 
-      setShowModal(false);
-      setEditId(null);
-      setForm({ title: "", content: "", image: "" });
-      fetchPosts();
+      try {
+        const result = await translateBatch({
+          posts: posts.map(p => ({
+            title: p.title,
+            content: p.content
+          }))
+        }, lang);
 
-    } catch (error) {
-      console.error(error);
-    }
-  };
+        const newPosts = posts.map((p, i) => ({
+          ...p,
+          title: result.posts?.[i]?.title || p.title,
+          content: result.posts?.[i]?.content || p.content
+        }));
+
+        setTranslatedPosts(newPosts);
+
+      } catch {
+        setTranslatedPosts(posts);
+      }
+    };
+
+    if (posts.length > 0) translate();
+  }, [lang, posts]);
 
   // ✏️ EDITAR
   const handleEdit = (post) => {
@@ -182,94 +74,64 @@ export default function Home() {
 
   // 🗑️ ELIMINAR
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      uiText.confirmDelete || defaultUI.confirmDelete
-    );
-    if (!confirmDelete) return;
+    if (!confirm("¿Eliminar este post?")) return;
 
     await fetch(`http://localhost:3001/api/posts/${id}`, {
-      method: "DELETE",
+      method: "DELETE"
     });
 
     fetchPosts();
   };
 
   // VALIDACIONES
-  const validateField = (name, value) => {
-    let error = "";
+  const validate = () => {
+    let newErrors = {};
 
-    if (name === "title") {
-      if (!value) error = "El título es obligatorio";
-      else if (value.length < 3)
-        error = "El título debe tener al menos 3 caracteres";
-    }
+    if (!form.title) newErrors.title = "Título requerido";
+    if (!form.content) newErrors.content = "Contenido requerido";
 
-    if (name === "content") {
-      if (!value) error = "El contenido es obligatorio";
-      else if (value.length < 10)
-        error = "El contenido debe tener al menos 10 caracteres";
-    }
-
-    if (name === "image") {
-      if (value && !value.startsWith("http"))
-        error = "La URL de la imagen no es válida";
-    }
-
-    return error;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  // 💾 SUBMIT
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    setForm({ ...form, [name]: value });
+    if (!validate()) return;
 
-    const error = validateField(name, value);
+    const url = editId
+      ? `http://localhost:3001/api/posts/${editId}`
+      : "http://localhost:3001/api/posts";
 
-    setErrors(prev => ({
-      ...prev,
-      [name]: error
-    }));
+    const method = editId ? "PUT" : "POST";
+
+    await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
+
+    setShowModal(false);
+    setEditId(null);
+    setForm({ title: "", content: "", image: "" });
+    fetchPosts();
   };
 
   return (
     <div className="container">
 
-      <Navbar onSearch={handleSearch} totalPosts={posts.length} />
+      <h1>{uiText.title}</h1>
+      <p>{uiText.subtitle}</p>
 
-      <h1>{uiText.title || defaultUI.title}</h1>
-      <p>{uiText.subtitle || defaultUI.subtitle}</p>
-
-      {/* 🌐 IDIOMA */}
-      <div style={{ marginBottom: "20px" }}>
-        <label>{uiText.selectLang || defaultUI.selectLang}: </label>
-
-        <select value={selectedLang} onChange={handleLangChange}>
-          <option value="es">Español</option>
-          <option value="en">English</option>
-          <option value="fr">Français</option>
-          <option value="de">Deutsch</option>
-        </select>
-
-        {isTranslating && (
-          <span style={{ marginLeft: "10px" }}>
-            {uiText.translating || defaultUI.translating}
-          </span>
-        )}
-      </div>
-
-      {/* ➕ BOTÓN */}
+      {/* ➕ BOTÓN FLOAT */}
       <button
-        className="btn btn-primary"
-        style={{
-          position: "fixed",
-          bottom: "30px",
-          right: "30px",
-          borderRadius: "50%",
-          width: "60px",
-          height: "60px",
-          fontSize: "24px"
+        className="fab"
+        onClick={() => {
+          setEditId(null);
+          setForm({ title: "", content: "", image: "" });
+          setShowModal(true);
         }}
-        onClick={() => setShowModal(true)}
       >
         +
       </button>
@@ -277,14 +139,13 @@ export default function Home() {
       {/* 📦 POSTS */}
       <div className="grid">
         {translatedPosts.length === 0 ? (
-          <p>{uiText.noPosts || defaultUI.noPosts}</p>
+          <div className="loader"></div> // 🔥 LOADING PRO
         ) : (
           translatedPosts.map(post => (
             <div
               key={post.id}
               className="card"
               onClick={() => navigate(`/post/${post.id}`)}
-              style={{ cursor: "pointer" }}
             >
               {post.image && (
                 <img src={post.image} className="card-img" />
@@ -302,7 +163,7 @@ export default function Home() {
                       handleEdit(post);
                     }}
                   >
-                    {uiText.edit || defaultUI.edit}
+                    ✏️ Editar
                   </button>
 
                   <button
@@ -312,7 +173,7 @@ export default function Home() {
                       handleDelete(post.id);
                     }}
                   >
-                    {uiText.delete || defaultUI.delete}
+                    🗑️ Eliminar
                   </button>
                 </div>
               </div>
@@ -328,37 +189,42 @@ export default function Home() {
           setShowModal(false);
           setEditId(null);
         }}
-        title={editId 
-          ? (uiText.update || defaultUI.update)
-          : (uiText.create || defaultUI.create)
-        }
+        title={editId ? "Editar Post" : "Crear Post"}
       >
         <form onSubmit={handleSubmit} className="form">
 
           <input
             name="title"
-            placeholder={uiText.titlePlaceholder || defaultUI.titlePlaceholder}
+            placeholder="Título"
             value={form.title}
-            onChange={handleChange}
+            onChange={(e) =>
+              setForm({ ...form, title: e.target.value })
+            }
           />
+          {errors.title && <span className="error">{errors.title}</span>}
 
           <textarea
             name="content"
-            placeholder={uiText.contentPlaceholder || defaultUI.contentPlaceholder}
+            placeholder="Contenido"
             value={form.content}
-            onChange={handleChange}
+            onChange={(e) =>
+              setForm({ ...form, content: e.target.value })
+            }
           />
+          {errors.content && <span className="error">{errors.content}</span>}
 
           <input
             name="image"
-            placeholder={uiText.imagePlaceholder || defaultUI.imagePlaceholder}
+            placeholder="URL Imagen"
             value={form.image}
-            onChange={handleChange}
+            onChange={(e) =>
+              setForm({ ...form, image: e.target.value })
+            }
           />
 
           <div style={{ display: "flex", gap: "10px" }}>
             <button type="submit" className="btn btn-primary">
-              {uiText.save || defaultUI.save}
+              💾 Guardar
             </button>
 
             <button
@@ -366,7 +232,7 @@ export default function Home() {
               className="btn btn-cancel"
               onClick={() => setShowModal(false)}
             >
-              {uiText.cancel || defaultUI.cancel}
+              Cancelar
             </button>
           </div>
 
