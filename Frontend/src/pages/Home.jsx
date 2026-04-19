@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { translateBatch } from "../services/translateService";
 import { useLanguage } from "../context/LanguageContext";
+import { FaEdit, FaTrash, FaPlus, FaSadTear } from "react-icons/fa"; // Importa los iconos necesarios
 
 export default function Home({ search }) {
   const [posts, setPosts] = useState([]);
@@ -69,13 +70,13 @@ export default function Home({ search }) {
         className="fab"
         onClick={() => navigate("/create")}
       >
-        +
+        <FaPlus /> {/* Reemplaza "+" con FaPlus */}
       </button>
 
       <div className="grid">
         {filteredPosts.length === 0 ? (
           <p style={{ textAlign: "center", opacity: 0.6 }}>
-            No se encontraron resultados 😢
+            No se encontraron resultados <FaSadTear /> {/* Reemplaza 😢 con FaSadTear */}
           </p>
         ) : (
           filteredPosts.map(post => (
@@ -100,7 +101,7 @@ export default function Home({ search }) {
                       navigate(`/edit/${post.id}`);
                     }}
                   >
-                    ✏️ Editar
+                    <FaEdit /> Editar {/* Reemplaza ✏️ con FaEdit */}
                   </button>
 
                   <button
@@ -110,7 +111,7 @@ export default function Home({ search }) {
                       handleDelete(post.id);
                     }}
                   >
-                    🗑️ Eliminar
+                    <FaTrash /> Eliminar {/* Reemplaza 🗑️ con FaTrash */}
                   </button>
                 </div>
               </div>

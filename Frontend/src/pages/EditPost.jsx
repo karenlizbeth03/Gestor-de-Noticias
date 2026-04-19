@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { FaEdit, FaSave } from "react-icons/fa"; // Importa iconos
 
 export default function EditPost() {
   const { id } = useParams();
@@ -87,7 +88,7 @@ export default function EditPost() {
             ← Volver
           </button>
 
-          <h1>✏️ Editar historia</h1>
+          <h1><FaEdit /> Editar historia</h1> {/* Reemplaza ✏️ con FaEdit */}
           <p>Modifica tu contenido</p>
         </div>
 
@@ -163,7 +164,7 @@ export default function EditPost() {
           {/* BOTONES */}
           <div className="form-actions">
             <button type="submit" className="btn-publish">
-              💾 Actualizar
+              <FaSave /> Actualizar 
             </button>
 
             <button

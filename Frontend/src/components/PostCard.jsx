@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { FaEye, FaEdit, FaTrash } from "react-icons/fa"; // Importa iconos
 
 export default function PostCard({ post, onDelete }) {
   return (
@@ -12,9 +13,9 @@ export default function PostCard({ post, onDelete }) {
         <p>{post.content.substring(0, 100)}...</p>
 
         <div className="card-actions">
-          <Link to={`/post/${post.id}`}>Ver</Link>
-          <Link to={`/edit/${post.id}`}>Editar</Link>
-          <button onClick={() => onDelete(post.id)}>Eliminar</button>
+          <Link to={`/post/${post.id}`}><FaEye /> Ver</Link> {/* Agrega FaEye */}
+          <Link to={`/edit/${post.id}`}><FaEdit /> Editar</Link> {/* Agrega FaEdit */}
+          <button onClick={() => onDelete(post.id)}><FaTrash /> Eliminar</button> {/* Agrega FaTrash */}
         </div>
       </div>
     </div>

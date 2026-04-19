@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { translateBatch } from "../services/translateService";
 import { useLanguage } from "../context/LanguageContext";
+import { FaArrowLeft, FaNewspaper } from "react-icons/fa"; // Importa iconos
 
 export default function PostDetail() {
   const { id } = useParams();
@@ -66,14 +67,30 @@ export default function PostDetail() {
       {/* CARD */}
       <div className="post-card">
 
-        <button className="post-back" onClick={() => navigate(-1)}>
-          ← Volver
+        <button 
+          className="post-back" 
+          onClick={() => navigate(-1)}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px', 
+            padding: '10px 15px', 
+            backgroundColor: '#f0f0f0', 
+            border: 'none', 
+            borderRadius: '5px', 
+            cursor: 'pointer', 
+            transition: 'background-color 0.3s' 
+          }}
+          onMouseEnter={(e) => e.target.style.backgroundColor = '#e0e0e0'}
+          onMouseLeave={(e) => e.target.style.backgroundColor = '#f0f0f0'}
+        >
+          <FaArrowLeft /> Volver {/* Reemplaza ← con FaArrowLeft y mejora estilo */}
         </button>
 
         <h1 className="post-title">{translated.title}</h1>
 
         <p className="post-meta">
-          📰 Publicado • {new Date().toLocaleDateString()}
+          <FaNewspaper /> Publicado • {new Date().toLocaleDateString()} {/* Reemplaza 📰 con FaNewspaper */}
         </p>
 
         {/* IMAGEN CENTRADA */}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useLanguage } from "../context/LanguageContext";
 import { useTheme } from "../context/ThemeContext";
+import { FaSearch, FaFileAlt, FaMoon, FaSun, FaPlus } from "react-icons/fa"; // Importa iconos
 
 export default function Navbar({ onSearch, totalPosts }) {
   const location = useLocation();
@@ -36,7 +37,7 @@ export default function Navbar({ onSearch, totalPosts }) {
       {/* CENTER */}
       <div className="nav-center">
         <div className="search-box">
-          <span>🔍</span>
+          <FaSearch /> {/* Reemplaza 🔍 con FaSearch */}
           <input
             placeholder={uiText.search || "Buscar noticias..."}
             value={search}
@@ -50,7 +51,7 @@ export default function Navbar({ onSearch, totalPosts }) {
 
         {/* CONTADOR */}
         <div className="badge">
-          📄 {totalPosts}
+          <FaFileAlt /> {totalPosts} {/* Reemplaza 📄 con FaFileAlt */}
         </div>
 
         {/* IDIOMA */}
@@ -66,7 +67,7 @@ export default function Navbar({ onSearch, totalPosts }) {
 
         {/* TEMA */}
         <button onClick={toggleTheme} className="theme-btn">
-          {theme === "dark" ? "🌙" : "☀️"}
+          {theme === "dark" ? <FaMoon /> : <FaSun />} {/* Reemplaza 🌙 y ☀️ con FaMoon y FaSun */}
         </button>
 
         {/* ✅ BOTÓN NUEVO CORREGIDO */}
@@ -74,7 +75,7 @@ export default function Navbar({ onSearch, totalPosts }) {
           className="btn-new"
           onClick={() => navigate("/create")}
         >
-          ✨ {uiText.newPost || "Nuevo"}
+          <FaPlus /> {uiText.newPost || "Nuevo"} {/* Reemplaza ✨ con FaPlus */}
         </button>
 
       </div>

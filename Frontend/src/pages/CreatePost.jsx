@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaPen, FaRocket } from "react-icons/fa"; // Importa iconos
 
 export default function CreatePost() {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ export default function CreatePost() {
             ← Volver
           </button>
 
-          <h1>✍️ Crear nueva historia</h1>
+          <h1><FaPen /> Crear nueva historia</h1> {/* Reemplaza ✍️ con FaPen */}
         </div>
 
         <form onSubmit={handleSubmit} className="create-form">
@@ -154,7 +155,7 @@ export default function CreatePost() {
 
           <div className="form-actions">
             <button type="submit" className="btn-publish">
-              🚀 Publicar
+              <FaRocket /> Publicar {/* Reemplaza 🚀 con FaRocket */}
             </button>
 
             <button
