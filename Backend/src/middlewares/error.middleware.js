@@ -1,15 +1,11 @@
-const notFound = (req, res) => {
+export const notFound = (req, res) => {
   res.status(404).json({ error: "Ruta no encontrada" });
 };
 
-module.exports = (err, req, res, next) => {
-  console.error("❌ ERROR:", err.message);
-  console.error(err.stack);
-
+const errorHandler = (err, req, res, next) => {
   res.status(err.status || 500).json({
-    success: false,
-    message: err.message || "Error interno del servidor"
+    message: err.message || "Error interno"
   });
 };
 
-export default notFound;
+export default errorHandler;
