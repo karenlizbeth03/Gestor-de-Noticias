@@ -373,6 +373,18 @@ body.light .modal-overlay {
   width: 420px;
   animation: fadeInUp 0.3s ease;
 }
+/* HEADER MODAL */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* BODY */
+.modal-body {
+  margin-top: 10px;
+}
 
 body.dark .modal {
   background: #1e293b;
@@ -759,6 +771,21 @@ body.light .btn-cancel {
   box-shadow: 0 0 12px rgba(59,130,246,0.3);
 }
 
+.form input,
+.form textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: white;
+}
+
+body.light .form input,
+body.light .form textarea {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+}
 /* PREVIEW */
 .image-preview img {
   width: 100%;

@@ -33,20 +33,43 @@ export default function CreatePost() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!validate()) return;
+  if (!validate()) return;
 
-    await fetch("http://localhost:3001/api/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+  const url = editId
+    ? `http://localhost:3001/api/posts/${editId}`
+    : "http://localhost:3001/api/posts";
+
+  const method = editId ? "PUT" : "POST";
+
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
 
-    navigate("/");
-  };
+    const data = await res.json();
+
+    // ❌ SI HAY ERROR DEL BACK
+    if (!res.ok) {
+      setErrors(data.errors || { general: data.message });
+      return;
+    }
+
+    // ✅ TODO OK
+    setShowModal(false);
+    setEditId(null);
+    setForm({ title: "", content: "", image: "" });
+    setErrors({});
+    fetchPosts();
+    
+
+  } catch (err) {
+    setErrors({ general: "Error de conexión con el servidor" });
+  }
+};
 
   return (
     <div className="create-page">
@@ -97,7 +120,7 @@ export default function CreatePost() {
 
           {/* CONTENIDO */}
           <textarea
-            className={`textarea ${errors.content ? "input-error" : ""}`}
+            className={`textarea big ${errors.content ? "input-error" : ""}`}
             placeholder="Empieza a escribir tu historia..."
             value={form.content}
             onChange={(e) =>
