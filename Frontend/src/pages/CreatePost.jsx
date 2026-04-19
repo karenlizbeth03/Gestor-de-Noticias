@@ -38,8 +38,8 @@ export default function CreatePost() {
   if (!validate()) return;
 
   const url = editId
-    ? `http://localhost:3001/api/posts/${editId}`
-    : "http://localhost:3001/api/posts";
+    ? `https://gestor-de-noticias.onrender.com/api/posts/${editId}`
+    : "https://gestor-de-noticias.onrender.com/api/posts";
 
   const method = editId ? "PUT" : "POST";
 

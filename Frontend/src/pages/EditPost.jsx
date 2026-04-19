@@ -24,7 +24,7 @@ export default function EditPost() {
 
   // 📥 CARGAR POST
   useEffect(() => {
-    fetch(`http://localhost:3001/api/posts/${id}`)
+    fetch(`https://gestor-de-noticias.onrender.com/api/posts/${id}`)
       .then(res => res.json())
       .then(data => setForm(data.data || {}));
   }, [id]);
@@ -56,7 +56,7 @@ export default function EditPost() {
     if (!validate()) return;
 
     try {
-      const res = await fetch(`http://localhost:3001/api/posts/${id}`, {
+      const res = await fetch(`https://gestor-de-noticias.onrender.com/api/posts/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

@@ -6,7 +6,7 @@ export const usePosts = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/posts")
+    fetch("https://gestor-de-noticias.onrender.com/api/posts")
       .then((res) => res.json())
       .then((data) => {
         console.log("API:", data);

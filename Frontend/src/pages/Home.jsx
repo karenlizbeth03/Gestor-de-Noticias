@@ -11,7 +11,7 @@ export default function Home({ search }) {
   const navigate = useNavigate();
 
   const fetchPosts = () => {
-    fetch("http://localhost:3001/api/posts")
+    fetch("https://gestor-de-noticias.onrender.com/api/posts")
       .then(res => res.json())
       .then(data => {
         setPosts(data.data || []);

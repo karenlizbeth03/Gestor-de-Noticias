@@ -3,8 +3,7 @@ export const translateBatch = async (payload, lang) => {
     const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer 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", // ⚠️ CAMBIA ESTO
-        "Content-Type": "application/json"
+        "Authorization": "Bearer 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", 
       },
       body: JSON.stringify({
         model: "openai/gpt-4o-mini",

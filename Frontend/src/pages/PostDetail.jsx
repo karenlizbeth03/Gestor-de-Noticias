@@ -12,7 +12,7 @@ export default function PostDetail() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:3001/api/posts/${id}`)
+    fetch(`https://gestor-de-noticias.onrender.com/api/posts/${id}`)
       .then(res => res.json())
       .then(data => setPost(data.data));
   }, [id]);
