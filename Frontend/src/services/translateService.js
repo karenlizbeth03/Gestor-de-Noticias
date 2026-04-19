@@ -1,47 +1,52 @@
-const cache = new Map();
-
-export const translateBatch = async (data, targetLang) => {
-  if (targetLang === "es") return data;
-
-  const cacheKey = JSON.stringify({ data, targetLang });
-
-  if (cache.has(cacheKey)) {
-    return cache.get(cacheKey);
-  }
-
+export const translateBatch = async (payload, lang) => {
   try {
     const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": "Bearer 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",
+        "Authorization": "Bearer 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", // ⚠️ CAMBIA ESTO
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "openrouter/elephant-alpha",
+        model: "openai/gpt-4o-mini",
         messages: [
           {
             role: "system",
-            content: "You are a translator. Return ONLY valid JSON. Do not explain anything."
+            content:
+              "Traduce el JSON al idioma indicado. Devuelve SOLO JSON válido, sin ``` ni texto extra."
           },
           {
             role: "user",
-            content: `Translate this JSON to ${targetLang}: ${JSON.stringify(data)}`
+            content: `Idioma: ${lang}\n\nJSON:\n${JSON.stringify(payload)}`
           }
         ]
       })
     });
 
-    const json = await res.json();
-    const text = json.choices?.[0]?.message?.content;
+    if (!res.ok) {
+      console.error("Error API:", res.status);
+      return payload;
+    }
 
-    const parsed = JSON.parse(text);
+    const data = await res.json();
 
-    cache.set(cacheKey, parsed);
+    let text = data.choices?.[0]?.message?.content || "";
 
-    return parsed;
+    // 🔥 LIMPIEZA PRO (CLAVE)
+    text = text
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    // 🔥 PARSE SEGURO
+    try {
+      return JSON.parse(text);
+    } catch (err) {
+      console.warn("JSON inválido, devolviendo original");
+      return payload;
+    }
 
   } catch (error) {
-    console.error("Batch translation error:", error);
-    return data;
+    console.error("Translation error:", error);
+    return payload;
   }
 };

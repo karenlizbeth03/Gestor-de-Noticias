@@ -364,3 +364,67 @@ input, textarea {
   border-color: #3b82f6;
   transform: translateY(-2px);
 }
+/* ===== THEME SYSTEM ===== */
+
+body.dark {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+body.light {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* CARDS */
+body.light .card {
+  background: white;
+  border: 1px solid #e2e8f0;
+}
+
+body.dark .card {
+  background: #1e293b;
+}
+
+/* DETAIL */
+body.light .detail-content {
+  background: white;
+  color: #0f172a;
+}
+
+body.dark .detail-content {
+  background: #1e293b;
+}
+
+/* BOTÓN FLOTANTE */
+.floating-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+}
+
+/* BOTÓN VOLVER DENTRO */
+.back-inside {
+  margin-bottom: 15px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #3b82f6;
+  color: white;
+  transition: 0.3s;
+}
+
+.back-inside:hover {
+  background: #2563eb;
+}
+
+/* LOADING */
+.loading {
+  padding: 40px;
+  text-align: center;
+}

@@ -3,18 +3,19 @@ import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import { translateBatch } from "../services/translateService";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
   const [translatedPosts, setTranslatedPosts] = useState([]);
-  const [uiText, setUiText] = useState({});
-  const [errors, setErrors] = useState({});
+  const [ setUiText] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState({ title: "", content: "", image: "" });
   const [editId, setEditId] = useState(null);
   const [selectedLang, setSelectedLang] = useState("es");
   const [isTranslating, setIsTranslating] = useState(false);
+  const { lang, uiText } = useLanguage();
 
   const navigate = useNavigate();
 
