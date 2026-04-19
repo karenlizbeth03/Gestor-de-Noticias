@@ -1,45 +1,20 @@
-const Post = require("../models/post.model");
+import { PrismaClient } from "@prisma/client";
 
-let posts = [];
-let idCounter = 1;
+const prisma = new PrismaClient();
 
-/**
- * Simula una base de datos en memoria
- */
-class PostRepository {
-  findAll() {
-    return posts;
-  }
+export const findAll = () =>
+  prisma.post.findMany({ orderBy: { createdAt: "desc" } });
 
-  findById(id) {
-    return posts.find(p => p.id === id);
-  }
+export const findById = (id) =>
+  prisma.post.findUnique({ where: { id: Number(id) } });
 
-  create(data) {
-    const newPost = new Post({
-      id: idCounter++,
-      ...data
-    });
+export const findBySlug = (slug) =>
+  prisma.post.findUnique({ where: { slug } });
 
-    posts.push(newPost);
-    return newPost;
-  }
+export const create = (data) => prisma.post.create({ data });
 
-  update(id, data) {
-    const index = posts.findIndex(p => p.id === id);
-    if (index === -1) return null;
+export const update = (id, data) =>
+  prisma.post.update({ where: { id: Number(id) }, data });
 
-    posts[index] = { ...posts[index], ...data };
-    return posts[index];
-  }
-
-  delete(id) {
-    const index = posts.findIndex(p => p.id === id);
-    if (index === -1) return false;
-
-    posts.splice(index, 1);
-    return true;
-  }
-}
-
-module.exports = new PostRepository();
+export const remove = (id) =>
+  prisma.post.delete({ where: { id: Number(id) } });

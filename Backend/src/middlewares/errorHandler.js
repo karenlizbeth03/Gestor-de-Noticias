@@ -1,9 +1,10 @@
-module.exports = (err, req, res, next) => {
-    console.error("❌ ERROR:", err.message);
-console.error(err.stack);
-    return res.status(err.status || 500).json({
-        success: false,
-        message: err.message,
-        errors: err.errors || null
-    });
+const errorHandler = (err, req, res, next) => {
+  if (res.headersSent) return next(err);
+
+  const status = err.status || 500;
+  res.status(status).json({
+    error: err.message || "Error interno del servidor"
+  });
 };
+
+export default errorHandler;

@@ -1,17 +1,23 @@
 {
-  "name": "backend",
+  "name": "gestor-de-noticias-backend",
   "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "prisma": "prisma"
   },
   "dependencies": {
-    "cors": "^2.8.6",
-    "dotenv": "^16.6.1",
-    "express": "^4.22.1"
+    "@prisma/client": "^5.22.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "prisma": "^5.22.0",
+    "slugify": "^1.6.6"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "nodemon": "^3.0.1"
   }
 }

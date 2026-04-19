@@ -1,13 +1,20 @@
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
+import {
+  createPost,
+  getAllPosts,
+  getPostById,
+  getPostBySlug,
+  updatePost,
+  deletePost
+} from "../controllers/post.controller.js";
 
-const controller = require("../controllers/post.controller");
-const { validatePost } = require("../validators/post.validator");
+const router = Router();
 
-router.get("/", controller.getPosts);
-router.get("/:id", controller.getPost);
-router.post("/", validatePost, controller.createPost);
-router.put("/:id", validatePost, controller.updatePost);
-router.delete("/:id", controller.deletePost);
+router.get("/", getAllPosts);
+router.get("/slug/:slug", getPostBySlug);
+router.get("/:id", getPostById);
+router.post("/", createPost);
+router.put("/:id", updatePost);
+router.delete("/:id", deletePost);
 
-module.exports = router;
+export default router;

@@ -1,3 +1,7 @@
+const notFound = (req, res) => {
+  res.status(404).json({ error: "Ruta no encontrada" });
+};
+
 module.exports = (err, req, res, next) => {
   console.error("❌ ERROR:", err.message);
   console.error(err.stack);
@@ -7,3 +11,5 @@ module.exports = (err, req, res, next) => {
     message: err.message || "Error interno del servidor"
   });
 };
+
+export default notFound;
