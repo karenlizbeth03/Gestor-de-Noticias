@@ -12,19 +12,28 @@ export default function CreatePost() {
 
   const [errors, setErrors] = useState({});
 
-  // VALIDACIÓN
+  // 🔍 VALIDAR URL
+  const isValidImageUrl = (url) => {
+    return (
+      !url ||
+      url.startsWith("http://") ||
+      url.startsWith("https://")
+    );
+  };
+
+  // ✅ VALIDACIÓN
   const validate = () => {
-    const newErrors = {};
+    let newErrors = {};
 
     if (!form.title || form.title.length < 3) {
-      newErrors.title = "El título debe tener al menos 3 caracteres";
+      newErrors.title = "Mínimo 3 caracteres";
     }
 
     if (!form.content || form.content.length < 10) {
-      newErrors.content = "El contenido debe tener al menos 10 caracteres";
+      newErrors.content = "Mínimo 10 caracteres";
     }
 
-    if (form.image && !form.image.startsWith("http")) {
+    if (!isValidImageUrl(form.image)) {
       newErrors.image = "URL inválida";
     }
 
@@ -32,51 +41,41 @@ export default function CreatePost() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // 💾 SUBMIT
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!validate()) return;
+    if (!validate()) return;
 
-  const url = editId
-    ? `https://gestor-de-noticias.onrender.com/api/posts/${editId}`
-    : "https://gestor-de-noticias.onrender.com/api/posts";
+    try {
+      const res = await fetch("https://gestor-de-noticias.onrender.com/api/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
 
-  const method = editId ? "PUT" : "POST";
+      const data = await res.json();
 
-  try {
-    const res = await fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
+      // ❌ ERRORES BACKEND
+      if (!res.ok) {
+        setErrors(data.errors || { general: data.message });
+        return;
+      }
 
-    const data = await res.json();
+      // ✅ OK
+      navigate("/");
 
-    // ❌ SI HAY ERROR DEL BACK
-    if (!res.ok) {
-      setErrors(data.errors || { general: data.message });
-      return;
+    } catch {
+      setErrors({ general: "Error de conexión con el servidor" });
     }
-
-    // ✅ TODO OK
-    setShowModal(false);
-    setEditId(null);
-    setForm({ title: "", content: "", image: "" });
-    setErrors({});
-    fetchPosts();
-    
-
-  } catch (err) {
-    setErrors({ general: "Error de conexión con el servidor" });
-  }
-};
+  };
 
   return (
     <div className="create-page">
-
       <div className="create-container">
 
-        {/* HEADER */}
         <div className="create-header">
           <button onClick={() => navigate(-1)} className="back-link">
             ← Volver
@@ -85,33 +84,51 @@ export default function CreatePost() {
           <h1>✍️ Crear nueva historia</h1>
         </div>
 
-        {/* FORM */}
         <form onSubmit={handleSubmit} className="create-form">
+
+          {/* ERROR GENERAL */}
+          {errors.general && (
+            <div className="alert error">{errors.general}</div>
+          )}
 
           {/* TITULO */}
           <input
             className={`input ${errors.title ? "input-error" : ""}`}
-            placeholder="Título de la historia..."
+            placeholder="Título..."
             value={form.title}
-            onChange={(e) =>
-              setForm({ ...form, title: e.target.value })
-            }
+            onChange={(e) => {
+              const value = e.target.value;
+              setForm({ ...form, title: value });
+
+              if (value.length < 3) {
+                setErrors(prev => ({ ...prev, title: "Mínimo 3 caracteres" }));
+              } else {
+                setErrors(prev => ({ ...prev, title: null }));
+              }
+            }}
           />
           {errors.title && <span className="error">{errors.title}</span>}
 
           {/* IMAGEN */}
           <input
             className={`input ${errors.image ? "input-error" : ""}`}
-            placeholder="URL de imagen (opcional)"
+            placeholder="URL imagen"
             value={form.image}
-            onChange={(e) =>
-              setForm({ ...form, image: e.target.value })
-            }
+            onChange={(e) => {
+              const value = e.target.value;
+              setForm({ ...form, image: value });
+
+              if (!isValidImageUrl(value)) {
+                setErrors(prev => ({ ...prev, image: "URL inválida" }));
+              } else {
+                setErrors(prev => ({ ...prev, image: null }));
+              }
+            }}
           />
           {errors.image && <span className="error">{errors.image}</span>}
 
           {/* PREVIEW */}
-          {form.image && (
+          {form.image && isValidImageUrl(form.image) && (
             <div className="image-preview">
               <img src={form.image} alt="preview" />
             </div>
@@ -120,20 +137,24 @@ export default function CreatePost() {
           {/* CONTENIDO */}
           <textarea
             className={`textarea big ${errors.content ? "input-error" : ""}`}
-            placeholder="Empieza a escribir tu historia..."
+            placeholder="Contenido..."
             value={form.content}
-            onChange={(e) =>
-              setForm({ ...form, content: e.target.value })
-            }
-          />
-          {errors.content && (
-            <span className="error">{errors.content}</span>
-          )}
+            onChange={(e) => {
+              const value = e.target.value;
+              setForm({ ...form, content: value });
 
-          {/* ACTIONS */}
+              if (value.length < 10) {
+                setErrors(prev => ({ ...prev, content: "Mínimo 10 caracteres" }));
+              } else {
+                setErrors(prev => ({ ...prev, content: null }));
+              }
+            }}
+          />
+          {errors.content && <span className="error">{errors.content}</span>}
+
           <div className="form-actions">
             <button type="submit" className="btn-publish">
-               Publicar
+              🚀 Publicar
             </button>
 
             <button

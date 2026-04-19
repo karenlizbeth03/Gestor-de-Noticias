@@ -11,8 +11,7 @@ export const LanguageProvider = ({ children }) => {
   const [isTranslating, setIsTranslating] = useState(false);
 
   const defaultUI = {
-    title: "Panel de Noticias",
-    subtitle: "Administra tus publicaciones fácilmente",
+    title: "Publicaciones",
     noPosts: "No hay publicaciones",
     edit: "Editar",
     delete: "Eliminar",
