@@ -1,8 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+html {
+  box-sizing: border-box;
+  width: 100%;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+html, body, #root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 /* ===== RESET & BASE ===== */
 body {
   margin: 0;
   font-family: "Inter", "Segoe UI", sans-serif;
   transition: 0.3s;
+  overflow-x: hidden;
 }
 
 /* ===== THEME ===== */
@@ -19,13 +35,14 @@ body.light {
 /* ===== NAVBAR MODERNO ===== */
 .navbar {
   display: flex;
+  flex-direction: column;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   padding: 14px 28px;
   position: sticky;
   top: 0;
   z-index: 100;
-
   backdrop-filter: blur(12px);
   background: rgba(15, 23, 42, 0.7);
   border-bottom: 1px solid rgba(148, 163, 184, 0.15);
@@ -81,7 +98,6 @@ body.light .navbar {
   width: 320px;
   padding: 8px 14px;
   border-radius: 999px;
-
   background: #1e293b;
   border: 1px solid #334155;
   transition: 0.3s;
@@ -175,10 +191,8 @@ body.light .theme-btn {
   border: none;
   cursor: pointer;
   font-size: 14px;
-
   background: linear-gradient(135deg, #3b82f6, #6366f1);
   color: white;
-
   transition: 0.3s;
 }
 
@@ -282,11 +296,13 @@ body.light .theme-btn {
 /* ===== GRID ===== */
 .container {
   padding: 30px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
 }
 
@@ -602,19 +618,7 @@ body.light .post-content {
   color: #1e293b;
 }
 
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .post-card {
-    margin: 60px 15px;
-    padding: 25px;
-  }
-
-  .post-title {
-    font-size: 28px;
-  }
-}
 /* ===== CREATE POST ===== */
-
 .create-page {
   display: flex;
   justify-content: center;
@@ -707,7 +711,6 @@ body.light .post-content {
   border-radius: 999px;
   border: none;
   cursor: pointer;
-
   background: linear-gradient(135deg, #3b82f6, #6366f1);
   color: white;
   font-weight: 600;
@@ -819,4 +822,335 @@ body.light .input,
 body.light .textarea {
   background: #f1f5f9;
   color: #0f172a;
+}
+
+/* ===== RESPONSIVE ===== */
+/* =========================
+   FIX GLOBAL RESPONSIVE
+========================= */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  white-space: nowrap;
+}
+
+/* Evita desbordes raros */
+.container,
+.grid,
+.card {
+  min-width: 0;
+}
+
+/* =========================
+   NAVBAR RESPONSIVE PRO
+========================= */
+
+/* TABLET */
+@media (max-width: 900px) {
+  .navbar {
+    flex-wrap: wrap;
+    padding: 10px 15px;
+  }
+
+  .nav-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .nav-center {
+    order: 3;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .nav-right {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .btn-new {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column; /* 🔥 ESTO FALTABA */
+    align-items: stretch;
+  }
+
+
+  .nav-left {
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 16px;
+  }
+
+  .nav-link {
+    font-size: 12px;
+  }
+
+  .nav-right {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .badge {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .select {
+    width: 100%;
+  }
+
+  .theme-btn {
+    width: 100%;
+  }
+
+  .btn-new {
+    grid-column: span 2;
+    width: 100%;
+  }
+}
+
+/* =========================
+   GRID MEJORADO
+========================= */
+
+.grid {
+  gap: 20px;
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   CARDS RESPONSIVE
+========================= */
+
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  flex: 1;
+}
+
+.card-actions {
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .card-img {
+    height: 160px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+/* =========================
+   FAB BUTTON MOBILE
+========================= */
+
+@media (max-width: 600px) {
+  .fab {
+    width: 55px;
+    height: 55px;
+    font-size: 20px;
+    bottom: 15px;
+    right: 15px;
+  }
+}
+
+/* =========================
+   MODAL RESPONSIVE FIX
+========================= */
+
+@media (max-width: 600px) {
+  .modal {
+    width: 95%;
+    max-width: 95%;
+    padding: 15px;
+  }
+}
+
+/* =========================
+   POST DETAIL RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+  .post-card {
+    margin: 60px 10px;
+    padding: 20px;
+  }
+
+  .post-title {
+    font-size: 26px;
+  }
+
+  .post-content {
+    font-size: 16px;
+  }
+}
+
+/* =========================
+   FORM RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .btn-publish,
+  .btn-cancel {
+    width: 100%;
+  }
+}
+/* NAVBAR TOP */
+.nav-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* BOTÓN HAMBURGUESA */
+.menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* CONTENIDO */
+.nav-content {
+  width: 100%;
+}
+/* NAVBAR BASE */
+
+
+/* TOP */
+.nav-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* BOTÓN */
+.menu-btn {
+  display: none;
+}
+
+/* DESKTOP */
+@media (min-width: 769px) {
+
+  .menu-btn {
+    display: none;
+  }
+
+  .nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .menu-btn {
+    display: block;
+  }
+
+  .nav-content {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .nav-content.open {
+    display: flex;
+  }
+
+  .nav-left,
+  .nav-center,
+  .nav-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nav-right {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .btn-new {
+    width: 100%;
+  }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+
+  .menu-btn {
+    display: block;
+  }
+  .container {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+
+  .search-box {
+    width: 100%;
+  }
+
+  .btn-new {
+    width: 100%;
+  }
+}
+
+body {
+  background: red;
+}
+
+@media (max-width: 768px) {
+  body {
+    background: green;
+  }
 }

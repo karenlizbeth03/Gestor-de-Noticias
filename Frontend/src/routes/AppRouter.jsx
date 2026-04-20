@@ -14,7 +14,7 @@ export default function AppRouter() {
     <BrowserRouter>
 
       {/* NAVBAR GLOBAL */}
-      <Navbar onSearch={setSearch} />
+      <Navbar onSearch={setSearch}/>
 
       <Routes>
         <Route path="/" element={<Home search={search} />} />
