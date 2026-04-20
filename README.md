@@ -5,7 +5,7 @@ Una aplicación para gestionar noticias, con backend y frontend separados.
 ## Tecnologías Utilizadas
 
 - **Backend**: Node.js, Express.js, Prisma ORM, PostgreSQL
-- **Frontend**: React, Vite, TypeScript, Tailwind CSS, React Router, i18next (para internacionalización)
+- **Frontend**: React, Vite, TypeScript, Tailwind CSS, React Router, OpenRouter usando una API (para internacionalización)
 - **Despliegue**: Backend en Render, Frontend en Vercel
 
 ## Requisitos Previos
