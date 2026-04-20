@@ -31,13 +31,9 @@ export default function Navbar({ onSearch, totalPosts }) {
 
   return (
     <nav className="navbar">
-
-      {/* TOP BAR */}
       <div className="nav-top">
+        <h2 className="logo">{uiText.navbarTitle || "Gestor de Noticias"}</h2>
 
-        <h2 className="logo">Gestor de Noticias</h2>
-
-        {/* BOTÓN HAMBURGUESA */}
         <button
           className="menu-btn"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -46,16 +42,13 @@ export default function Navbar({ onSearch, totalPosts }) {
         </button>
       </div>
 
-      {/* CONTENIDO */}
       <div className={`nav-content ${menuOpen ? "open" : ""}`}>
-
         <div className="nav-left">
           <Link
             to="/"
-            className={`nav-link ${location.pathname === "/" ? "active" : ""
-              }`}
+            className={`nav-link ${location.pathname === "/" ? "active" : ""}`}
           >
-            PUBLICACIONES
+            {uiText.publications || "PUBLICACIONES"}
           </Link>
         </div>
 
@@ -63,7 +56,7 @@ export default function Navbar({ onSearch, totalPosts }) {
           <div className="search-box">
             <FaSearch />
             <input
-              placeholder={uiText.search || "Buscar noticias..."}
+              placeholder={uiText.searchPlaceholder || "Buscar noticias..."}
               value={search}
               onChange={handleSearch}
             />
@@ -71,7 +64,6 @@ export default function Navbar({ onSearch, totalPosts }) {
         </div>
 
         <div className="nav-right">
-
           <div className="badge">
             <FaFileAlt /> {totalPosts}
           </div>
@@ -94,11 +86,9 @@ export default function Navbar({ onSearch, totalPosts }) {
             className="btn-new"
             onClick={() => navigate("/create")}
           >
-            <FaPlus /> Nuevo
+            <FaPlus /> {uiText.newPost || "Nuevo"}
           </button>
-
         </div>
-
       </div>
     </nav>
   );
