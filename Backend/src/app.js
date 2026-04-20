@@ -1,18 +1,21 @@
-import express from "express";
-import cors from "cors";
+// Este archivo configura la aplicación Express, incluyendo middleware y rutas.
+// No es el punto de entrada, pero configura la app para ser usada en server.js.
 
-import postRoutes from "./routes/post.routes.js";
-import errorHandler, { notFound } from "./middlewares/error.middleware.js";
+import express from 'express';
+import cors from 'cors';
+import postRoutes from './routes/post.routes.js';
+import errorHandler from './middlewares/errorHandler.js';
 
 const app = express();
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/posts", postRoutes);
+// Rutas
+app.use('/api/posts', postRoutes);
 
-// 👇 siempre al final
-app.use(notFound);
+// Manejo de errores
 app.use(errorHandler);
 
 export default app;

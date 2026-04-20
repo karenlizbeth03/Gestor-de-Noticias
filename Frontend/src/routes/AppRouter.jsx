@@ -1,3 +1,6 @@
+// Este componente configura el enrutamiento para la aplicación usando React Router.
+// Define las rutas para diferentes páginas.
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 

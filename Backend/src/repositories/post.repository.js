@@ -1,3 +1,6 @@
+// Este repositorio maneja las operaciones de base de datos para posts usando Prisma.
+// Proporciona métodos para interactuar con la tabla de posts.
+
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();

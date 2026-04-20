@@ -1,3 +1,6 @@
+// Este controlador maneja las solicitudes HTTP para operaciones relacionadas con posts.
+// Usa el servicio de posts para la lógica de negocio y devuelve respuestas.
+
 import * as postService from "../services/post.service.js";
 import { generateSlug } from "../utils/slug.js";
 

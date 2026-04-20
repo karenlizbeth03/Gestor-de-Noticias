@@ -1,3 +1,6 @@
+// Este hook personalizado maneja el estado y operaciones para posts.
+// Proporciona funciones para obtener, crear, actualizar y eliminar posts.
+
 import { useEffect, useState } from "react";
 
 export const usePosts = () => {

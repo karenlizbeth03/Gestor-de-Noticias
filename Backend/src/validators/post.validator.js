@@ -1,3 +1,6 @@
+// Este validador usa Joi para validar datos de posts.
+// Define el esquema para creación y actualización de posts.
+
 exports.validatePost = (req, res, next) => {
   const { title, content, image } = req.body;
 

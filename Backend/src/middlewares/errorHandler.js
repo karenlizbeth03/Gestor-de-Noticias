@@ -1,3 +1,6 @@
+// Este middleware maneja errores globalmente para la aplicación.
+// Captura errores y envía una respuesta de error estandarizada.
+
 const errorHandler = (err, req, res, next) => {
   if (res.headersSent) return next(err);
 

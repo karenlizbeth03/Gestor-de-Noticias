@@ -1,3 +1,7 @@
+
+// Este contexto maneja el estado del idioma para la aplicación.
+// Proporciona el idioma actual, texto de UI y una función para cambiar el idioma.
+
 import { createContext, useContext, useEffect, useState } from "react";
 import { translateBatch } from "../services/translateService";
 
@@ -9,7 +13,7 @@ export const LanguageProvider = ({ children }) => {
   const [lang, setLang] = useState("es");
   const [uiText, setUiText] = useState({});
   const [isTranslating, setIsTranslating] = useState(false);
-
+// Texto de UI por defecto en español
   const defaultUI = {
     title: "Publicaciones",
     noPosts: "No hay publicaciones",

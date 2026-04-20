@@ -1,3 +1,7 @@
+
+// Esta es una función serverless de Vercel que maneja solicitudes de traducción.
+// Usa la API de Google Translate para traducir los datos proporcionados.
+
 export default async function handler(req, res) {
   try {
     const { payload, lang } = req.body;

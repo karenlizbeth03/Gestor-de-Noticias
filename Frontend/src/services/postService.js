@@ -1,3 +1,6 @@
+// Este servicio maneja llamadas a la API para operaciones de posts.
+// Proporciona funciones para interactuar con la API backend para posts.
+
 const API_URL = import.meta.env.VITE_API_URL + "/posts";
 
 // Obtener todos
@@ -6,7 +9,7 @@ export const getPosts = async () => {
   return res.json();
 };
 
-// 🔥 ESTE ES EL QUE TE FALTA
+// obtener un post
 export const getPost = async (id) => {
   const res = await fetch(`${API_URL}/${id}`);
   return res.json();

@@ -1,3 +1,7 @@
+// Este archivo define las rutas para endpoints relacionados con posts.
+// Mapea métodos HTTP y rutas a funciones del controlador.
+
+
 import { Router } from "express";
 import {
   createPost,

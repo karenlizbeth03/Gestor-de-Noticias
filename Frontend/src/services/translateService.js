@@ -1,3 +1,6 @@
+// Este servicio maneja solicitudes de traducción a la API de traducción.
+// Envía datos para traducir y devuelve el resultado traducido.
+
 export const translateBatch = async (payload, lang) => {
   try {
     const res = await fetch("/api/translate", {

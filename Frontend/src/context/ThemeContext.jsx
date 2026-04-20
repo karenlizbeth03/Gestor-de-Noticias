@@ -1,3 +1,6 @@
+// Este contexto maneja el estado del tema (oscuro o claro) para la aplicación.
+// Proporciona el tema actual y una función para alternarlo.
+
 import { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
