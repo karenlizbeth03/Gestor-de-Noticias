@@ -172,6 +172,24 @@ Gestor-de-Noticias/
 4. Push a la rama (`git push origin feature/nueva-funcionalidad`).
 5. Abre un Pull Request.
 
-## Licencia
+## Traducción de la interfaz
 
-Este proyecto está bajo la Licencia MIT.
+La aplicación usa la API de OpenRouter para traducir los textos de la página. Esta API se utiliza porque ofrece una opción gratuita, pero tiene un límite de tokens mensuales.
+
+### Variables de entorno
+
+La clave de OpenRouter se debe configurar en el entorno como variable de entorno, por ejemplo:
+
+- `OPENROUTER_API_KEY`
+
+No debes subir esta clave al repositorio.
+
+### Vercel
+
+En Vercel también debes añadir la misma variable de entorno `OPENROUTER_API_KEY` en la configuración del proyecto para que la traducción funcione en producción.
+
+### Consideraciones
+
+- OpenRouter es gratuita hasta cierto límite de tokens.
+- Si se supera ese límite, la funcionalidad de traducción puede dejar de funcionar hasta el siguiente ciclo de facturación.
+- Mantén la clave segura y fuera del código fuente.
